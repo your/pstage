@@ -1,6 +1,6 @@
 #pstage
 
-Map-based web app to browse through the list of companies in partnership with the [Polythecnic University of Bari](http://poliba.it) for the request of interships and the recognition of university credits (CFU).
+Map-based web app to browse through the list of companies in partnership with the [Polythecnic University of Bari](http://poliba.it) for the request of internships and the recognition of university credits (CFU).
 
 #demo
 ![](demo.gif)
