@@ -1,0 +1,30 @@
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4 text-center">
+		<h1>Aggiungi Categoria</h1>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4">
+		<%= form_for(@category) do |f| %>
+			<div class="form-group">
+				<%= f.label :denominazione, class:'h2' %>
+				<%= f.text_field :name, class: 'form-control' %>
+			</div>
+		    <% if @category.errors[:name].any? %>
+		      <p class='error-messages'>
+		        The field <%= @category.errors[:name].to_sentence %>.
+		      </p>
+		    <% end %>
+			<%= f.submit "Salva Modifica", class: "btn btn-primary" %>
+		<% end %>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>

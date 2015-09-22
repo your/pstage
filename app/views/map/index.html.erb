@@ -1,0 +1,491 @@
+<% content_for(:head) do %>
+    <script>
+    window.MyApi = window.MyApi || {};
+    window.MyApi.Data = window.MyApi.Data || {};
+    window.MyApi.Data.pList = [
+        <% @offices.each do |p| %>
+		<%= p.to_json(include: [:partner]).html_safe %>,
+        <% end %>
+    ];
+    </script>
+<% end %>
+<%= yield :head %>
+
+<div id="map" class="map" style="overflow: hidden; transform: translateZ(0px); background-color: #fff;"></div>
+<div class="over-map" id="draggable">
+	<div class="search-box-title"><a href="javascript:void(0)" id="switch-search">RICERCA</a>
+		<div class="search-box-show-results">
+		<% if results == 0 %>
+			(nessun risultato)
+		<% else %>
+			<% if results > 0 %>
+				(<a href="javascript:void(0)" id="switch-results"><%= results %> risultati</a>)
+			<% end %>
+		<% end %>
+		</div>
+	</div>
+	<div class="search-box">
+		<div class="search-box-form" id="results" style="display: block;">
+		  <div class="search-box-form-inner-results" style="padding-top: 20px;">
+		  <div class="col-xs-12">
+				<div class="table-responsive" style="height: 300px;">
+				<table class="table table-hover">
+		  		  <thead>
+			  		<tr>
+			 	 	   <th>Città</th>
+			 	 	  <th>Denominazione</th>
+		  			</tr>
+	 		   		</thead>
+					<tbody class="search-box-inner-results-fixed-header">
+						<% @offices.each do |office| %>
+				        	<tr>
+								<td><%= office.area_level3.name.titleize %></td>
+								<td id="<%= office.id %>"><a href="javascript:void(0)"><%= office.partner.name %></a></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+				</div>
+			</div>
+		  </div>
+		  
+		  
+		  
+
+				</div>
+		<div class="search-box-form" id="search">
+		<%= form_tag({:action => 'index'}, method: 'get', enforce_utf8: false) do %>
+		<%= hidden_field_tag :lat, get_lat, { } %>
+		<%= hidden_field_tag :lng, get_lng, { } %>
+		<%= hidden_field_tag :zoom, get_zoom, { } %>
+		<%= hidden_field_tag :highlight, get_highlight, { } %>
+		
+		
+			<div class="search-box-item search-box-descr">
+			  Filtra i risultati di ricerca:
+			</div>
+			
+			<div class="row search-box-item form-group">
+				<div class="col-xs-12 input-group-lg">
+					<%= text_field_tag :city, get_city, class: 'form-control', placeholder: 'Città' %>
+				</div>
+			</div>
+			
+			<div class="row search-box-item  form-group">
+				<div class="col-xs-7 input-group-lg">
+				  	<%= text_field_tag :name, get_name, class: 'form-control', placeholder: 'Denominaz.' %>
+				</div>
+				<div class="col-xs-5 input-group-lg">
+					<%= hidden_field_tag :type, get_type, { } %>
+					
+					<select id="partners-types" multiple="multiple" class="form-control">
+  				      <option value="SPA">SPA</option>
+  				      <option value="SRL">SRL</option>
+  				      <option value="SNC">SNC</option>
+  				      <option value="SAS">SAS</option>
+  				      <option value="ENTE">ENTE</option>
+  				      <option value="ONLUS">ONLUS</option>
+				  	</select>
+				  
+				</div>
+			</div>
+			
+			<div class="row search-box-item form-group">
+				<div class="col-xs-12 input-group-lg">
+				  <select id="partners-categories" multiple="multiple">
+				      <option value="cheese">Cheese</option>
+				      <option value="tomatoes">Tomatoes</option>
+				      <option value="mozarella">Mozzarella</option>
+				      <option value="mushrooms">Mushrooms</option>
+				      <option value="pepperoni">Pepperoni</option>
+				      <option value="onions">Onions</option>
+				  </select>
+			  	</div>
+			</div>
+			
+			<div class="search-box-submit">
+				<%= submit_tag "APPLICA FILTRI",  name: nil, id: 'search', data: { disable_with: "Attendi.." }, class: "btn btn-lg btn-primary" %>
+	  	  	  </div>
+			
+		<% end %>
+	</div>
+		
+	</div>
+				  
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#partners-categories').multiselect({
+		buttonClass: 'btn btn-lg btn-default',
+		buttonWidth: '255px',
+		nonSelectedText: 'Categorie',
+		includeSelectAllOption: true,
+		selectAllName: 'Seleziona Tutte',
+		buttonText: function(options, select) {
+			if (options.length === 0) {
+				return 'Categorie';
+			}
+			else if (options.length > 1 && options.length < 6) {
+				return 'Categorie: ' + '' + options.length + '';
+			}
+			else if (options.length === 6) {
+				return 'Tutte le categorie';
+			} else {
+				var labels = [];
+				options.each(function() {
+					if ($(this).attr('label') !== undefined) {
+						labels.push($(this).attr('label'));
+					} else {
+						labels.push($(this).html());
+					}
+				});
+				return labels.join(', ') + '';
+			}
+		}
+	});
+	$('#partners-types').multiselect({
+		onChange: function(element, checked) {
+			console.log('Before: ', $('#type').attr('value'));
+			elemValue = $(element).html();
+			if (elemValue !== undefined) {
+				setValues = $('#type').attr('value');
+				if (setValues !== undefined) {
+					previousInsertion = setValues.indexOf(elemValue);
+				} else {
+						previousInsertion = -1;
+					}
+					if(checked === true) {
+						if (previousInsertion == -1) {
+							if (setValues === undefined) {		
+								newValues = elemValue;
+							} else {
+								newValues = setValues + '+' + elemValue; 
+							}
+							$('#type').attr('value', newValues);
+						}	
+					} else if (checked === false) {
+						if (previousInsertion > -1) {
+							previousSplit = setValues.split('+');
+							newSplit = [];
+							$.each(previousSplit, function( index, value ) {
+								if (value !== elemValue) {
+									newSplit.push(value);
+								}
+							});
+							newValues = newSplit.join('+');
+							$('#type').attr('value', newValues);					
+						}
+					}
+				}
+			},
+			buttonClass: 'btn btn-lg btn-default',
+			maxHeight: 185,
+            dropRight: true,
+            buttonWidth: '89px',
+            nonSelectedText: 'Tipo',
+			includeSelectAllOption: true,
+			buttonText: function(options, select) {
+				if (options.length === 0) {
+					return 'Tipo';
+				}
+				else if (options.length > 1 && options.length < 6) {
+					return 'Tipi: ' + options.length;
+				}
+				else if (options.length === 6) {
+					return 'Tutti';
+				}
+				else {
+					var labels = [];
+					options.each(function() {
+						if ($(this).attr('label') !== undefined) {
+							labels.push($(this).attr('label'));
+						}
+						else {
+							labels.push($(this).html());
+						}
+					});
+					return labels.join(', ') + '';
+				}
+			}
+		});		
+		//placeMultiSelectSelected('#partners-categories');
+		placeMultiSelectSelected('#partners-types', '#type');
+		setSelectAllSelectorsText();
+	});
+	function placeMultiSelectSelected(selectorSelector, selectorHiddenField) {
+		setValues = $(selectorHiddenField).attr('value');
+		console.log('setValues: ', setValues);
+		if (setValues !== undefined) {
+			previousSplit = setValues.split(' ');
+			if (previousSplit.length > 0) {
+	    		$(selectorSelector).multiselect('select', previousSplit);
+				console.log('Selected: ', selectorHiddenField);
+			}
+		}
+	}
+	function setSelectAllSelectorsText() {
+		// monkey way
+		$('.multiselect-all label').html('<input type="checkbox" value="multiselect-all"> Seleziona tutti');
+	}
+	$('#partners-categories').hide(); /* tmpry disabled since categories are not present yet */
+</script>
+<script>
+	String.prototype.capitalizeFirstLetter = function() {
+	    return this.charAt(0).toUpperCase() + this.slice(1);
+	}
+	function roundToFive(num) {    
+	    return +(Math.round(num + "e+5")  + "e-5");
+	}
+	
+	var $office = $('#office')
+	var base_url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0/images/";
+	var mapStyle = [{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}]; /* https://snazzymaps.com/style/61/blue-essence */
+
+  var InfoBoxBuilder,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  InfoBoxBuilder = (function(superClass) {
+    extend(InfoBoxBuilder, superClass);
+
+    function InfoBoxBuilder() {
+      return InfoBoxBuilder.__super__.constructor.apply(this, arguments);
+    }
+
+    InfoBoxBuilder.prototype.create_infowindow = function() {
+      var boxText;
+      if (!_.isString(this.args.infowindow)) {
+        return null;
+      }
+      boxText = document.createElement("div");
+      boxText.setAttribute('class', 'marker_container');
+      boxText.innerHTML = this.args.infowindow;
+      return this.infowindow = new InfoBox(this.infobox(boxText));
+    };
+
+    InfoBoxBuilder.prototype.infobox = function(boxText) {
+      return {
+		  content: boxText,
+		  disableAutoPan: false,
+		  maxWidth: 150,
+		  pixelOffset: new google.maps.Size(-140, 0),
+		  boxStyle: {
+          width: "280px",
+		  background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
+		  opacity: 0.95,
+			
+        },
+		closeBoxMargin: "12px 4px 2px 2px",
+        closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+        infoBoxClearance: new google.maps.Size(1, 1)
+      };
+    };
+
+    return InfoBoxBuilder;
+
+  })(Gmaps.Google.Builders.Marker);
+
+  // ---
+  // generated by coffee-script 1.9.2
+  
+  var southWest = new google.maps.LatLng( 33.21, -15.57 );
+  var northEast = new google.maps.LatLng( 49.56, -40.63 );
+  var strictBounds = new google.maps.LatLngBounds( southWest, northEast );
+  
+	var handler = Gmaps.build('Google',
+        {builders: { Marker: InfoBoxBuilder}, markers:
+          {clusterer: {
+            gridSize: 30,
+            maxZoom: 20,
+			  styles: [{
+			  height: 53,
+			  url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
+			  width: 53
+			  },
+			  {
+			  height: 56,
+			  url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m2.png",
+			  width: 56
+			  },
+			  {
+			  height: 66,
+			  url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m3.png",
+			  width: 66
+			  },
+			  {
+			  height: 78,
+			  url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m4.png",
+			  width: 78
+			  },
+			  {
+			  height: 90,
+			  url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m5.png",
+			  width: 90
+			  }]}}}
+      );
+
+	handler.buildMap({ provider: { maxZoom: 22, styles: mapStyle }, internal: {id: 'map'}}, function(){
+		var lat = $('#lat').attr('value');
+		var lng = $('#lng').attr('value');
+		var zoom = $('#zoom').attr('value');
+		var highlight = $('#highlight').attr('value');
+		var json_array = [];
+		var content_array = [];
+		console.log(window.MyApi.Data.pList);
+		for (var i = 0; i < window.MyApi.Data.pList.length; i++) {
+			var p = window.MyApi.Data.pList[i];
+			content = '<div class="infobox-title"><h6>'+String(p.partner.name)+'</h6></div><div class="infobox-item infobox-url"><a href="#">'+String(p.partner.website)+'</a></div><div class="infobox-item infobox-descr"><p>'+String(p.partner.activities).capitalizeFirstLetter()+'</p></div><div class="infobox-item infobox-more"><a href="javascript:void(0)">ulteriori informazioni</a></div><div class="infobox-moreinfo">Evvai<br>Evvai<br>Evvai<br>Evvai<br>Evvai<br>Evvai<br></div></div>';
+			content_array.push(content);
+			
+			json_array.push({ lat: p.latitude, lng: p.longitude, name: p.partner_id, infowindow: content, picture: { url: 'http://gmapsmarkergenerator.eu01.aws.af.cm/getmarker?scale=1&color=00adad', width: 22, height: 40 } });
+		}
+		var markers = handler.addMarkers(json_array);
+		console.log(window.MyApi.Data.pList);
+  		handler.bounds.extendWith(markers);
+  		if ((lat !== undefined || lat !== "") && (lng !== undefined || lng !== "")) handler.getMap().setCenter(new google.maps.LatLng(lat, lng));
+		handler.fitMapToBounds();
+		if (zoom === "" || zoom === undefined) zoom = 5;
+  		handler.getMap().setZoom(parseInt(zoom));
+				
+		$.each(markers, function(index, marker) {
+		    google.maps.event.addListener(marker.serviceObject, 'click', function(v, e) {
+		      updateFormLocation(marker.serviceObject.getPosition(), handler.getMap().getZoom());
+			  updateFormHighlight(json_array[index].name);
+		    });
+		    if (highlight !== "" && json_array[index].name == parseInt(highlight)) {				
+				google.maps.event.trigger(marker.serviceObject, 'click');
+			}
+			
+			currentSelector = '#'+json_array[index].name
+			bindTdToMarker(currentSelector, marker);
+			
+		});
+		
+		google.maps.event.addListener(handler.getMap(), 'dragend', function() {
+			updateFormLocation(handler.getMap().getCenter(), handler.getMap().getZoom());
+		});
+   	 	
+	    google.maps.event.addListener(handler.getMap(), 'bounds_changed', function() {
+	      if (strictBounds.contains(handler.getMap().getCenter())) return; 
+	      handler.getMap().setCenter(new google.maps.LatLng(42.446899108080196, 12.353205174999982));
+	    });
+		
+	 });
+
+	function bindTdToMarker(selector, marker){
+	  td = $(selector);	
+	  td.on('click', function(){
+	    handler.getMap().setZoom(14);
+	    marker.setMap(handler.getMap()); //because clusterer removes map property from marker
+	    marker.panTo();
+	    google.maps.event.trigger(marker.getServiceObject(), 'click');
+	  })
+	};
+
+// Update form attributes with given coordinates
+function updateFormLocation(latLng, zoomLevel) {
+	var newLat = roundToFive(latLng.lat());
+	var newLng = roundToFive(latLng.lng());
+	$('#lat').attr('value', newLat);
+	$('#lng').attr('value', newLng);
+	$('#zoom').attr('value', zoomLevel);
+	queryString.push('lng', newLng );
+	queryString.push('lat', newLat );
+	queryString.push('zoom', zoomLevel);
+}
+function updateFormHighlight(highLighted) {
+	$('#highlight').attr('value', highLighted);
+	queryString.push('highlight', highLighted);
+}
+
+</script>
+
+<script>
+$(function() {
+	$(".search-box-form#results").hide();
+	$('.search-box-show-results a#switch-results').click(function() {
+		$(".search-box-form#results").show("slide", { direction: "down" }, "slow");
+	});
+	$('.search-box-title a#switch-search').click(function() {
+		$(".search-box-form#results").hide("slide", { direction: "down" }, "slow");
+	});
+    $( "#draggable" ).draggable();
+	
+	function getURLParameter(name) {
+	  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+	}
+	
+	function getDetails() {
+		var partner;
+		var office;
+		var representatives;
+		var partnerships;
+		
+		partner_id = getURLParameter('highlight');
+		
+		$.ajax({
+			url:  "/partners/"+partner_id,
+			dataType: "json",
+			success: function(data) { 
+				partner = data;
+				$.ajax({
+					url:  "/offices/"+partner_id,
+					dataType: "json",
+					success: function(data) { 
+						office = data;
+					    $.ajax({
+					       url:  "/partnerships/"+partner_id,
+						   /* skipping office_id matching.. add it asap */
+					       dataType: "json",
+					       success: function(data) { 
+							   partnership = data
+							   $.ajax({
+								   url:  "/representatives/"+data["id"],
+						  	       dataType: "json",
+						  	       success: function(data) { 
+									   representatives = data;
+									   var json = { partner: partner, office: office, partnership: partnership, representatives: representatives };
+									   var partnerName = json.partner.name === undefined ? '-' : json.partner.name;
+									   var partnerWebsite = json.partner.website === undefined ? '-' : json.partner.website;
+									   var partnerActivities = json.partner.activities === undefined ? '-' : json.partner.activities;
+									   var officeAddress = json.office.address === undefined ? '-' : json.office.address;
+									   var representativesName = json.representatives.name === undefined ? '-' : json.representatives.name;
+									   var representativesTel = json.representatives.tel === undefined ? '-' : json.representatives.tel;
+									   var representativesFax = json.representatives.fax === undefined ? '-' : json.representatives.fax;
+									   var representativesEmail = json.representatives.email === undefined ? '-' : json.representatives.email;
+									   var partnershipSigning = json.partnership.signing_date === undefined ? '-' : json.partnership.signing_date;
+									   var partnershipNote = json.partnership.note === undefined ? '-' : json.partnership.note;
+									   BootstrapDialog.show({
+										   message: '<div class="row"> <div class="col-xs-4 field-name">Attività svolte</div> <div class="col-xs-8">'+String(partnerActivities)+'</div> </div><div class="separator"> </div><div class="row"> <div class="col-xs-4 field-name">Indirizzo</div> <div class="col-xs-8">'+String(officeAddress)+'</div> </div> <div class="row"> <div class="col-xs-4 field-name">Sito web</div> <div class="col-xs-8">'+String(partnerWebsite)+'</div> </div><div class="separator"> </div><div class="row"> <div class="col-xs-4 field-name">Referenti</div> <div class="col-xs-8">'+String(representativesName)+'</div> </div><div class="row"> <div class="col-xs-4 field-name">Telefono</div> <div class="col-xs-8">'+String(representativesTel)+'</div> </div><div class="row"> <div class="col-xs-4 field-name">Fax</div> <div class="col-xs-8">'+String(representativesFax)+'</div> </div><div class="row"> <div class="col-xs-4 field-name">E-mail</div> <div class="col-xs-8">'+String(representativesEmail)+'</div> </div><div class="separator"> </div><div class="row"> <div class="col-xs-4 field-name">Data stipula</div> <div class="col-xs-8">'+String(partnershipSigning)+'</div> </div><div class="row"> <div class="col-xs-4 field-name">Note</div> <div class="col-xs-8">'+String(partnershipNote)+'</div> </div>',
+										   title: String(partnerName),
+										   buttons: [{
+											   label: 'Chiudi',
+											   action: function(dialogItself){
+												   dialogItself.close();
+											   }
+										   }]
+									   });
+								   }
+						  	   });
+						  	}
+					   });
+					}
+				});
+			}
+	   });
+	}
+
+	$(".map").arrive(".infoBox", function() {
+	    var $newElem = $(this);
+		var target =  '.infobox-more a'
+		$(target).unbind('click');
+		$(target).on("click", function() {
+			getDetails();
+		});
+	});
+  });
+</script>
+
+<% content_for :scripts do %>
+<% end %>
+<% yield :scripts %>

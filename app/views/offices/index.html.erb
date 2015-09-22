@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4 text-center">
+		<h1>Sedi legali</h1>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4">
+		<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><%= link_to '#', :action => :index, :order_by => 'id' %></th>
+					<th><%= link_to 'Denominazione', :action => :index, :order_by => 'name' %></th>
+					<th><%= link_to 'Aggiunto Il', :action => :index, :order_by => 'created_at' %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @offices.each do |office| %>
+		        	<tr>
+						<td><%= office.id %></td>
+						<td><%= link_to office.route, office %></td>
+						<td><%= office.created_at.strftime('%d/%m/%Y') %></td>
+					</tr>
+				<% end %>
+
+			</tbody>
+		</table>
+		</div>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>

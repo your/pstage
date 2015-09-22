@@ -1,0 +1,444 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require jquery-ui
+ *= require boomstrap
+ *= require bootstrap-datepicker3
+ *= require bootstrap-multiselect
+ *= require bootstrap-dialog
+ *= require_self
+ *= require_tree .
+*/
+
+/* container adjusted */
+.alt-grid .container { width:100%; max-width:none; padding:0; }
+
+.body { font-family: Raleway; }
+
+a {
+    color: #333;
+    text-decoration: none;
+    color: #00adad;
+}
+
+a:active, a:link, a:visited, a:focus {
+    text-decoration: none;
+    color: #00adad;
+}
+
+a:hover {
+    /* text-decoration: underline; */
+    color: #333;
+}
+
+.h1 {
+	font-weight: 300;
+	font-size: 27px;
+}
+
+.row { margin: 0; } /* removing bootstrap 15px row margins */
+
+.header-descr {
+	padding: 46px;
+	padding-top: 27px;
+	padding-bottom: 27px;
+	line-height: 18px;
+	font-family: Raleway;
+	font-weight: 400;
+	font-size: 13.5px;
+	background-color: #00adad;
+	color: #fff;
+	/* opacity: 0.6; */
+}
+
+.header-title {
+    line-height: 4px;
+    /* margin-bottom: -8px; */
+    padding: 28px;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    font-weight: 100;
+    font-size: 12px;
+}
+
+.search-box {
+    width: 325px;
+    /*height: 350px;*/
+    opacity: 1;
+    /* padding: 20px 15px 15px; */
+    background: #fff;
+    /* margin-top: 50px; */
+    padding-bottom: 22px;
+    border-bottom: 8px solid #555;
+}
+
+.search-box-descr {
+    margin-top: 0px;
+    /* font-variant: normal; */
+    font-weight: 400;
+    color: #333;
+    margin-left: 15px;
+    /* text-align: center; */
+    font-size: 23.3px;
+}
+
+.search-box-title {
+    background: #555;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 10px;
+    padding-left: 30px;
+	padding-right: 30px;
+    color: #fafafa;
+    /* padding-top: 50px; */
+}
+
+.search-box-show-results {
+	float:right;
+}
+
+.search-box-form {
+    /*height: 350px;*/
+}
+
+.search-box-form#search {
+	padding-top: 25px;
+}
+
+.search-box-form#results {
+    background: #fafafa;
+    position: absolute;
+    z-index: 200;
+    width: 100%;
+    opacity: 0.95;
+	border-top: 8px solid #333;
+	height: 342px; /* 350-8 */
+	display: 0; /* hidden by default */
+}
+
+.search-box-form-inner-results {
+	/*padding-top: 25px;*/
+}
+.search-box-form-inner-results.table-responsive {
+	height: 279px;
+}
+
+.search-box-item {
+    padding: 5px;
+    /* margin-bottom: 3px; */
+    padding-left: 20px;
+    padding-right: 20px;
+    /* background: #000; */
+    /* z-index: 2; */
+    /* opacity: 0.95; */
+    /* margin-bottom: 10px; */
+    padding-top: 15px;
+}
+
+.search-box-submit {
+	text-align:center;
+	margin-top: 40px;
+	margin-bottom: 20px;
+}
+
+.search-box-inner-results-fixed-header {
+    background-color: #fafafa;
+	height: 300px !important;
+	    /*overflow: scroll;*/
+	    /*display: block;*/
+}
+
+.search-box-title a:hover, a:focus {
+    color: #fafafa;
+    text-decoration: underline;
+}
+
+.search-box-title a {
+    color: #fff;
+}
+
+.footer-notes {
+    height: 110px;
+    line-height: 20px;
+    font-size: 11.5px;
+	padding:20px;
+}
+
+.footer-notes-source {
+	line-height:30px;
+	color: lightgray;
+}
+
+.map {
+	width: 100%;
+	height: 500px;
+	position: absolute;
+	z-index: 0;
+	margin-left: -15px; /* removing bootstrap 15px row margins */
+	background-color: rgb(229, 227, 223);
+	overflow: hidden;
+}
+
+.over-map {
+	height: 500px;
+	position: relative;
+	z-index: 1;
+	float:right;
+	top: 40px;
+	left: -50px;
+}
+
+.btn.btn-primary:hover {
+    background: #00ADAD;
+    border: none;
+}
+
+.btn.btn-primary {
+	font-weight: 600;
+    background: #555;
+    border: none;
+}
+
+.leadcat {
+    font-size: 15px;
+    width: 65px;
+    margin-bottom: 5px;
+}
+
+.form-group {
+	padding-bottom: 0;
+	z-index: 200;
+}
+
+.alert-dismissible {
+    border-radius: 0;
+}
+
+.notice {
+	position: fixed;
+	/* bottom: -20px; */
+	z-index: 100;
+	/* width: 100%; */
+	height: 129px;
+	/* min-height: 184px; */
+	/* border-radius: 0; */
+	opacity: 0.95;
+	text-align: right;
+	padding: 40px;
+	/* float: right; */
+}
+
+.notice h3 {
+	margin-bottom:0px;
+}
+
+.notice p {
+	margin: 0 0 10px;
+	padding: 10px;
+	padding-left: 20px;
+	padding-bottom: 5px;
+}
+
+.text-right {
+	text-align:;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+	background-image: none;
+	background-color: none;
+}
+.btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+	background-image: none;
+	background-color: none;
+}
+.btn-default {
+	background-image: none;
+}
+
+.btn-lg {
+	font-family: Raleway;
+	border-radius: 0px;
+	font-size:17px;
+}
+
+.input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn {
+    border-radius: 0px;
+    font-family: Raleway;
+    z-index: 300;
+	font-size:17px;
+	height: 44px;
+}
+
+.tooltip.in {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.tooltip-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  background-color: #000;
+  border-radius: 4px;
+}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn {
+    border-radius: 0px;
+    font-family: Raleway;
+	z-index:300;
+}
+
+.multiselect-container {
+    position: relative;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+	width: 255px;
+}
+
+.gm-style img {
+    max-width: none;
+    padding-top: 5px;
+}
+
+.marker_container {
+	border-top: 6px solid #333;
+	    background: #fff;
+	    /* font-size: 14px; */
+	    /* padding: 20px; */
+	    /* border: 2px solid black; */
+	    /* margin-top: 8px; */
+	    /* background-color: #333; */
+	    color: #FFF;
+	    /* font-family: Arial, Helvetica, sans-serif; */
+	    font-size: 12px;
+	    /* padding: .5em 1em; */
+	    padding-top: 5px;
+	    -webkit-border-radius: 0px;
+	    -moz-border-radius: 2px;
+	    border-radius: 0px;
+	    /* text-shadow: 0 -1px #000000; */
+	    /* -webkit-box-shadow: 0 0 2px #000; */
+	    /* box-shadow: 0 0 2px #000; */
+	    margin-top: 7px;
+	    margin-right: 0px;
+	    padding-right: -3px;
+		padding-bottom: 10px;
+}
+
+
+.infobox-title {
+    padding: 6px;
+    padding-right: 25px;
+    padding-left: 15px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 0px;
+    /* border: 1px solid; */
+    /* background: #333; */
+    color: #333;
+    /* opacity: 1; */
+}
+
+.infoBox a:focus {
+    color: #00adad;
+    text-decoration: none;
+}
+
+.infobox-item {
+    padding-left: 20px;
+    padding-right: 25px;
+    color: #555;
+}
+
+.infobox-url {
+	font-size: 13px;
+}
+
+.infobox-descr {
+	font-size: 15px;
+}
+
+.infobox-more {
+	text-align: right;
+	font-size: 10px;
+}
+
+.infobox-moreinfo {
+	display:none;
+}
+
+.modal-dialog {
+	font-family: Raleway;
+	margin: 200px auto;
+}
+
+.modal-header {
+    padding: 12px;
+    border-bottom: 1px solid #cccccc;
+    min-height: 16.42857143px;
+    font-weight: 600;
+	background-color: #333;
+}
+
+.field-name {
+    font-weight: 100;
+    color: gray;
+}
+.modal-content {
+    position: relative;
+    background-color: #ffffff;
+    border: 0px solid #999999;
+    border: 0px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0px;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    background-clip: padding-box;
+    outline: 0;
+}
+
+.modal-body {
+    position: relative;
+    padding: 20px;
+}
+
+.separator {
+	height: 20px;
+}
+
+.bootstrap-dialog .modal-header {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.bootstrap-dialog-title {
+    color: #fff;
+    display: inline-block;
+    font-size: 16px;
+    padding-left: 15px;
+}
+
+.bootstrap-dialog.type-primary .modal-header {
+    background-color: #333;
+}
+
+@media (min-width: 768px)
+.modal-dialog {
+    width: 440px;
+    margin: 160px auto;
+}

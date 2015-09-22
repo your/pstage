@@ -1,0 +1,41 @@
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4 text-center">
+		<h1><%= @partner.name %><br><small><%= @partner.website %></small></h1>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4">
+		<% if @offices.size > 0 %>
+			<%= form_for (@partner), url: partner_path, method: :get, :enforce_utf8 => false do |f| %>
+				<div class="form-group">
+					<h2>Sede</h2>
+					<%= select_tag :office, options_from_collection_for_select(@offices, :id, :address, @office.id),  class: "form-control", :onchange => "this.form.submit()" %>
+				</div>
+			<% end %>
+		<% end %>
+		<% if @office.nil? %>
+	    	<%= button_to "Aggiungi Sede", new_office_path, method: 'get', params: { partner: @partner.id }, class: "btn btn-success btn-block" %>
+		<% else %>
+			<% if @partnership.nil? %>
+				<%= button_to "Aggiungi Partnership", new_partnership_path, method: 'get', params: { partner: @partner.id, office: @office.id }, class: "btn btn-danger btn-block", :disabled => @office.nil?  %>
+			<% else %>
+				<%= button_to "Aggiungi Referente", new_representative_path, method: 'get', params: { partnership: @partnership.id }, class: "btn btn-highlight btn-block" %>
+				<%= button_to "Modifica Partnership", edit_partnership_path(@partnership), method: 'get', params: { partner: @partner.id, office: @office.id }, class: "btn btn-danger btn-block" %>
+			<% end %>
+			<%= button_to "Modifica Sede", edit_office_path(@office), method: 'get', params: { partner: @partner.id, office: @office.id }, class: "btn btn-success btn-block" %>
+	    	<%= button_to "Aggiungi Sede", new_office_path, method: 'get', params: { partner: @partner.id, office: @office.id }, class: "btn btn-success btn-block" %>
+	    	<%= button_to "Elimina Sede", office_path, method: 'delete', params: { partner: @partner.id, office: @office.id }, class: "btn btn-success btn-block" %>
+		<% end %>
+	    <%= button_to "Modifica Generali", edit_partner_path, method: 'get', class: "btn btn-primary btn-block" %>
+	    <%= button_to "Elimina", partner_path, method: 'delete',  class: "btn btn-attention btn-block" %>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>

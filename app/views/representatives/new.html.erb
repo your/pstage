@@ -1,0 +1,60 @@
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4 text-center">
+		<h1>Aggiungi Representative</h1>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4">
+		<%= form_for(@representative) do |f| %>
+			<% if @representative.errors.any? %>
+			<ul>
+			  <% @representative.errors.full_messages.each do |msg| %>
+			    <li><%= msg %></li>
+			  <% end %>
+			</ul>
+			<% end %>
+				<%= f.hidden_field :partnership_id, value: @partnership.id, class: 'form-control' %>
+				<%= f.hidden_field :partner_id, value: @partner.id, class: 'form-control' %>
+				<%= f.hidden_field :office_id, value: @office.id, class: 'form-control' %>
+				<div class="form-group">
+					<%= f.label :route, 'Partner', class:'h3' %>
+					<p class="form-group-static"><%= @partner.name %></p>
+				</div>
+				<div class="form-group">
+					<%= f.label :route, 'Sede', class:'h3' %>
+					<p class="form-control-static"><%= @office.address %></p>
+				</div>
+				<div class="form-group">
+					<%= f.label :signing_date, 'Data stipula', class:'h3' %>
+					<p class="form-control-static"><%= @partnership.try(:signing_date).try(:strftime,'%d/%m/%Y') %></p>
+				</div>
+				<div class="form-group">
+					<%= f.label :name, 'Nome e cognome', class:'h3' %>
+					<%= f.text_field :name, class: 'form-control' %>
+				</div>
+				<div class="form-group">
+					<%= f.label :tel, 'Telefono', class:'h3' %>
+					<%= f.text_field :tel, class: 'form-control' %>
+				</div>
+				<div class="form-group">
+					<%= f.label :fax, 'Fax', class:'h3' %>
+					<%= f.text_field :fax, class: 'form-control' %>
+				</div>
+				<div class="form-group">
+					<%= f.label :email, 'E-mail', class:'h3' %>
+					<%= f.text_field :email, class: 'form-control' %>
+				</div>
+
+			<%= f.submit "Salva Modifica", class: "btn btn-primary" %>
+		<% end %>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>

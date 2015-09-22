@@ -1,0 +1,52 @@
+<!--<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4 text-center">
+		<h1>Partnership</h1>
+	</div>
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-6 col-sm-2"></div>
+	<div class="col-xs-6 col-sm-6">
+		<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><%#= link_to '#', :action => :index, :order_by => 'id' %></th>
+					<th><%#= link_to 'Partner', :action => :index, :order_by => 'name' %></th>
+					<th>Note</th>
+					<th><%#= link_to 'Stipulata Il', :action => :index, :order_by => 'signing_date' %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<%# @partnerships.each do |partnership| %>
+		        	<tr>
+						<td><%#= partnership.id %></td>
+						<td><%#= link_to get_partner(partnership).name, partner_path(get_partner(partnership)) %></td>
+						<td>
+							<small><%#= get_partner(partnership).note %></small>
+						</td>
+						<td>
+							<%# if partnership.signing_date.nil? %>
+								N/A
+							<%# else %>
+								<%#= partnership.signing_date.strftime('%d/%m/%Y') %></td>
+							<%# end %>
+						</td>
+					</tr>
+				<%# end %>
+
+			</tbody>
+		</table>
+		</div>
+	</div>
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-2"></div>
+</div>
+-->
+<div id="js-partnerships-editor"></div>
+  <%= react_component 'PartnershipsEditor', { data: @partnerships } %>
+
+  

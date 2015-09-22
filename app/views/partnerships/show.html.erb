@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4 text-center">
+		<h1><%= @partner.name %></h1>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-6 col-sm-4"></div>
+	<div class="col-xs-6 col-sm-4">
+		<%= hidden_field_tag "office", @office.id, { "data-name" => @partner.name, "data-addr" => @office.address, "data-lat" => @office.latitude, "data-lng" => @office.longitude } %>
+	    <%= button_to "Modifica", edit_office_path, method: 'get', class: "btn btn-primary btn-block" %>
+	    <%= button_to "Elimina", office_path, method: 'delete',  class: "btn btn-attention btn-block" %>
+<div style='width: 800px;'>
+  <div id="map" style='width: 800px; height: 400px;'></div>
+</div>
+	</div>
+	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	<div class="clearfix visible-xs-block"></div>
+	<div class="col-xs-6 col-sm-4"></div>
+</div>
+<script>
+var $office = $('#office')
+var handler = Gmaps.build('Google');
+handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+  var markers = handler.addMarkers([
+    { lat: $office.data("lat"), lng: $office.data("lng"), infowindow:$office.data("name")},
+  ]);
+  handler.bounds.extendWith(markers);
+  handler.fitMapToBounds();
+  handler.getMap().setZoom(12);
+});
+</script>
